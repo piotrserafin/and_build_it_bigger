@@ -1,7 +1,7 @@
 package pl.piotrserafin.jokeslib;
 
 public class Joker {
-    public String provideJoke() {
+    public static String provideJoke() {
         return "This is not funny Joke";
     }
 }
