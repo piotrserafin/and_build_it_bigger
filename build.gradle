@@ -20,3 +20,34 @@ allprojects {
         google()
     }
 }
+
+task startAppEngine() {
+    dependsOn ":backend:appengineStart"
+    doLast {
+        println 'Started GCE local engine'
+    }
+}
+
+task runTests() {
+    shouldRunAfter "startAppEngine"
+    dependsOn ":app:connectedAndroidTest"
+    doLast {
+        println 'Finished all tests!'
+    }
+}
+
+task stopAppEngine() {
+    dependsOn ":backend:appengineStop"
+    shouldRunAfter "runTests"
+    doLast {
+        println 'Stopped GCE local engine'
+    }
+}
+
+task performTestsWithGCE {
+    dependsOn = ["startAppEngine", "runTests", "stopAppEngine"]
+    doLast {
+        println 'Finished all tests!'
+    }
+
+}

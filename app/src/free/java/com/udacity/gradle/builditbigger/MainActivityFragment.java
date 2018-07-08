@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -25,7 +26,8 @@ import pl.piotrserafin.jokesdisplay.JokesActivity;
  */
 public class MainActivityFragment extends Fragment {
 
-    Button jokeButton;
+    private Button jokeButton;
+    private ProgressBar jokeLoadingPb;
 
     public MainActivityFragment() {
     }
@@ -35,8 +37,8 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
+        jokeLoadingPb = root.findViewById(R.id.pb_loading_joke);
         jokeButton = root.findViewById(R.id.joke_btn);
-
         jokeButton.setOnClickListener(this::tellJoke);
 
         AdView mAdView = root.findViewById(R.id.adView);
@@ -51,12 +53,14 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void sendJokeToDisplayActivity(String result) {
+        jokeLoadingPb.setVisibility(View.INVISIBLE);
         Intent jokesDisplayIntent = new Intent(getActivity(), JokesActivity.class);
         jokesDisplayIntent.putExtra(JokesActivity.JOKE_KEY, result);
         startActivity(jokesDisplayIntent);
     }
 
     public void tellJoke(View view) {
+        jokeLoadingPb.setVisibility(View.VISIBLE);
         JokesEndpointsAsyncTask jokesEndpointsAsyncTask = new JokesEndpointsAsyncTask();
         jokesEndpointsAsyncTask.setListener(this::sendJokeToDisplayActivity);
         jokesEndpointsAsyncTask.execute();
